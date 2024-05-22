@@ -1,0 +1,146 @@
+<Schema name="ProjetDW_AZLAOUI_BAYO_BOULASSAL">
+  <Dimension type="TimeDimension" name="Time">
+    <Hierarchy hasAll="false" primaryKey="time_id">
+      <Table name="time_by_day">
+      </Table>
+      <Level name="Year" column="the_year" type="Numeric" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never">
+      </Level>
+      <Level name="Quarter" column="quarter" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="Never">
+      </Level>
+      <Level name="Month" column="month_of_year" type="String" uniqueMembers="false" levelType="TimeMonths" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+    <Hierarchy name="Weekly" hasAll="true" primaryKey="time_id">
+      <Table name="time_by_day">
+      </Table>
+      <Level name="Year" column="the_year" type="Numeric" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never">
+      </Level>
+      <Level name="Week" column="week_of_year" type="Numeric" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="Never">
+      </Level>
+      <Level name="Day" column="day_of_month" type="Numeric" uniqueMembers="false" levelType="TimeDays" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" name="Product">
+    <Hierarchy hasAll="true" primaryKey="product_id" primaryKeyTable="product">
+      <Join leftKey="product_class_id" rightKey="product_class_id">
+        <Table name="product">
+        </Table>
+        <Table name="product_class">
+        </Table>
+      </Join>
+      <Level name="Product Family" table="product_class" column="product_family" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Product Department" table="product_class" column="product_department" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Product Category" table="product_class" column="product_category" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Product Subcategory" table="product_class" column="product_subcategory" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Brand Name" table="product" column="brand_name" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Product Name" table="product" column="product_name" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" name="Store">
+    <Hierarchy hasAll="true" primaryKey="store_id">
+      <Table name="store">
+      </Table>
+      <Level name="Store Country" column="store_country" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Store State" column="store_state" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Story City" column="store_city" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Store Name" column="store_name" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        <Property name="Store Type" column="store_type" type="String">
+        </Property>
+        <Property name="Store Manager" column="store_manager" type="String">
+        </Property>
+        <Property name="Store Sqft" column="store_sqft" type="Numeric">
+        </Property>
+        <Property name="Grocery Sqft" column="grocery_sqft" type="Numeric">
+        </Property>
+        <Property name="Frozen Sqft" column="frozen_sqft" type="Numeric">
+        </Property>
+        <Property name="Meat Sqft" column="meat_sqft" type="Numeric">
+        </Property>
+        <Property name="Has coffe bar" column="coffee_bar" type="Boolean">
+        </Property>
+        <Property name="Street address" column="store_street_address" type="String">
+        </Property>
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Cube name="projetDW" cache="true" enabled="true">
+    <Table name="sales_fact_projetdw">
+    </Table>
+    <DimensionUsage source="Store" name="Store" foreignKey="store_id">
+    </DimensionUsage>
+    <DimensionUsage source="Time" name="Time" foreignKey="time_id">
+    </DimensionUsage>
+    <DimensionUsage source="Product" name="Product" foreignKey="product_id">
+    </DimensionUsage>
+    <Dimension type="StandardDimension" foreignKey="customer_id" name="Customers">
+      <Hierarchy hasAll="true" allMemberName="All Customers" primaryKey="customer_id">
+        <Table name="customer">
+        </Table>
+        <Level name="Country" column="country" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="State Province" column="state_province" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="City" column="city" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Name" column="customer_id" type="Numeric" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+          <Property name="Gender" column="gender" type="String">
+          </Property>
+          <Property name="Marital Status" column="marital_status" type="String">
+          </Property>
+          <Property name="Education" column="education" type="String">
+          </Property>
+          <Property name="Yearly Income" column="yearly_income" type="String">
+          </Property>
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="customer_id" name="Yearly Income">
+      <Hierarchy hasAll="true" primaryKey="customer_id">
+        <Table name="customer">
+        </Table>
+        <Level name="Yearly Income" column="yearly_income" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="customer_id" name="Education">
+      <Hierarchy hasAll="true" primaryKey="customer_id">
+        <Table name="customer">
+        </Table>
+        <Level name="Education" column="education" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="customer_id" name="Occupation">
+      <Hierarchy hasAll="true" primaryKey="customer_id">
+        <Table name="customer">
+        </Table>
+        <Level name="Occupation" column="occupation" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="customer_id" name="Number_children_at_home">
+      <Hierarchy hasAll="true" primaryKey="customer_id">
+        <Table name="customer">
+        </Table>
+        <Level name="Number_children_at_home" column="num_children_at_home" type="Numeric" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Measure name="Unit sales" column="unit_sales" formatString="Standard" aggregator="sum" visible="false">
+    </Measure>
+    <Measure name="Store Cost" column="store_cost" formatString="#,###.00" aggregator="sum" visible="false">
+    </Measure>
+    <Measure name="Store Sales" column="store_sales" formatString="#,###.00" aggregator="sum" visible="true">
+    </Measure>
+  </Cube>
+</Schema>
