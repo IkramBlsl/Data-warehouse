@@ -85,7 +85,7 @@ GROUP BY
     num_children_at_home;
 
 --###################################################################################################
---Question 3
+--Question 3 : 
 
 WITH ranked_brands AS (
     SELECT
@@ -155,7 +155,7 @@ ORDER BY
 LIMIT 5; -- Sélectionner les 5 premières marques avec les plus grands bénéfices
 
 --#################################################################################################
---Question 5
+--Question 5 :
 
 SELECT
     num_children_at_home,
@@ -173,7 +173,7 @@ GROUP BY
 limit 10;
 
 --###################################################################################################
---Question 6 
+--Question 6 :
 
 WITH TopCategories AS (
     SELECT pc.product_category
